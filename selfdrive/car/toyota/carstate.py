@@ -49,8 +49,8 @@ class CarState(CarStateBase):
 
     if CP.flags & ToyotaFlags.HYBRID.value:
       self.shifter_values = can_define.dv["GEAR_PACKET_HYBRID"]["GEAR"]
-    else:
-      self.shifter_values = can_define.dv["GEAR_PACKET"]["GEAR"]
+    # else:
+    #   self.shifter_values = can_define.dv["GEAR_PACKET"]["GEAR"]
 
     # On cars with cp.vl["STEER_TORQUE_SENSOR"]["STEER_ANGLE"]
     # the signal is zeroed to where the steering angle is at start.
@@ -99,8 +99,8 @@ class CarState(CarStateBase):
 
       if self.CP.flags & ToyotaFlags.HYBRID.value:
         can_gear = int(cp.vl["GEAR_PACKET_HYBRID"]["GEAR"])
-      else:
-        can_gear = int(cp.vl["GEAR_PACKET"]["GEAR"])
+      # else:
+        # can_gear = int(cp.vl["GEAR_PACKET"]["GEAR"])
     else:
       if self.CP.enableGasInterceptor:
         ret.gas = (cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS"] + cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS2"]) // 2
@@ -142,7 +142,8 @@ class CarState(CarStateBase):
         ret.steeringAngleOffsetDeg = self.angle_offset.x
         ret.steeringAngleDeg = torque_sensor_angle_deg - self.angle_offset.x
 
-    ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
+    # ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
+    ret.gearShifter = self.parse_gear_shifter("DRIVE")
     ret.leftBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 1
     ret.rightBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 2
 
@@ -283,8 +284,8 @@ class CarState(CarStateBase):
       ]
       if CP.flags & ToyotaFlags.HYBRID.value:
         messages.append(("GEAR_PACKET_HYBRID", 60))
-      else:
-        messages.append(("GEAR_PACKET", 1))
+      # else:
+      #   messages.append(("GEAR_PACKET", 1))
     else:
       messages.append(("VSC1S07", 20))
       if CP.carFingerprint not in [CAR.TOYOTA_MIRAI]:
